@@ -264,13 +264,6 @@ public class SubscriptionController extends ISub.Stub {
          // FIXME: Remove if listener technique accepted.
          broadcastSimInfoContentChanged();
      }
-	 
-	 private boolean isNumeric(String str) {
-         for (char c : str.toCharArray()) {
-             if (!Character.isDigit(c)) return false;
-         }
-         return true;
-     }
 
     /**
      * New SubInfoRecord instance and fill in detail info
@@ -314,11 +307,6 @@ public class SubscriptionController extends ISub.Stub {
                 + " displayName:" + displayName + " nameSource:" + nameSource
                 + " iconTint:" + iconTint + " dataRoaming:" + dataRoaming
                 + " mcc:" + mcc + " mnc:" + mnc + " countIso:" + countryIso + " userNwMode:" + userNwMode);
-        }
-		
-		if (isNumeric(carrierName)) {
-            carrierName = displayName;
-            logd("[getSubInfoRecord] carrierName changed to: " + displayName);
         }
 
         // If line1number has been set to a different number, use it instead.
