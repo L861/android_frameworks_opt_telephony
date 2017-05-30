@@ -1750,23 +1750,33 @@ public abstract class PhoneBase extends Handler implements Phone {
         // Only set preferred network types to that which the modem supports
         int modemRaf = getRadioAccessFamily();
         int rafFromType = RadioAccessFamily.getRafFromNetworkType(networkType);
-/*
-        if (modemRaf == RadioAccessFamily.RAF_UNKNOWN
-                || rafFromType == RadioAccessFamily.RAF_UNKNOWN) {
-            Rlog.d(LOG_TAG, "setPreferredNetworkType: Abort, unknown RAF: "
-                    + modemRaf + " " + rafFromType);
-            if (response != null) {
-                CommandException ex;
+        int filteredType = 0;
 
-                ex = new CommandException(CommandException.Error.GENERIC_FAILURE);
-                AsyncResult.forMessage(response, null, ex);
-                response.sendToTarget();
-            }
-            return;
+        switch (rafFromType) {
+        case 101902:
+                filteredType = RILConstants.NETWORK_MODE_WCDMA_PREF;
+                break;
+        case 65542:
+                filteredType = RILConstants.NETWORK_MODE_GSM_ONLY;
+                break;
+        case 36360:
+                filteredType = RILConstants.NETWORK_MODE_WCDMA_ONLY;
+                break;
+        default:
+                if ((modemRaf == RadioAccessFamily.RAF_UNKNOWN
+                        || rafFromType == RadioAccessFamily.RAF_UNKNOWN)) {
+                        Rlog.d(LOG_TAG, "setPreferredNetworkType: Abort, unknown RAF: " +
+                         modemRaf + " " + rafFromType);
+                        if (response != null) {
+                            CommandException ex;
+
+                                ex = new CommandException(CommandException.Error.GENERIC_FAILURE);
+                                AsyncResult.forMessage(response, null, ex);
+                                response.sendToTarget();
+                        }
+                        return;
+                }
         }
-*/
-        int filteredRaf = (rafFromType);
-        int filteredType = RadioAccessFamily.getNetworkTypeFromRaf(filteredRaf);
 
         // The getNetworkTypeFromRaf, has no way to differentiate between MODE_GSM_UMTS
         // and MODE_WCDMA_PREF since they have the same raf. So check for it explicitly
